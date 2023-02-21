@@ -1,0 +1,15 @@
+using UnityEngine;
+
+[CreateAssetMenu()]
+public class AudioClipRefSO : ScriptableObject
+{
+    public AudioClip[] chop;
+    public AudioClip[] deliveryFailed;
+    public AudioClip[] deliverySuccess;
+    public AudioClip[] footstep;
+    public AudioClip[] objectDrop;
+    public AudioClip[] objectPickUp;
+    public AudioClip stoveSizzle;
+    public AudioClip[] trash;
+    public AudioClip[] warning;
+}
