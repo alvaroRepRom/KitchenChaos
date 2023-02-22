@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class KitchenGameManager : MonoBehaviour
@@ -22,7 +20,8 @@ public class KitchenGameManager : MonoBehaviour
     private State state;
     private float waitToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
-    private float gamePlayingToStartTimer = 10f;
+    private float gamePlayingToStartTimer;
+    private float gamePlayingToStartTimerMax = 10f;
 
     private void Awake()
     {
@@ -47,6 +46,7 @@ public class KitchenGameManager : MonoBehaviour
                 if ( countdownToStartTimer < 0 )
                 {
                     state = State.GamePlaying;
+                    gamePlayingToStartTimer = gamePlayingToStartTimerMax;
                     OnStateChanged?.Invoke( this , EventArgs.Empty );
                 }
                 break;
@@ -67,4 +67,6 @@ public class KitchenGameManager : MonoBehaviour
     public bool IsGamePlaying() => state == State.GamePlaying;
     public bool IsCountdownToStartActive() => state == State.CountdownToStart;
     public float CountdownToStartTimer() => countdownToStartTimer;
+    public bool IsGameOver() => state == State.GameOver;
+    public float GetGamePlayingTimeNormalized() => 1 - gamePlayingToStartTimer / gamePlayingToStartTimerMax;
 }
