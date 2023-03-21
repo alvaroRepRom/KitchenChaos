@@ -134,7 +134,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
         float moveDistance = Time.deltaTime * moveSpeed;
         float playerRadius = 0.7f;
-        float playerHeight = 2f;
+        //float playerHeight = 2f;
         bool canMove = !Physics.BoxCast( transform.position , Vector3.one * playerRadius , moveDir, Quaternion.identity , moveDistance , collisionsLayerMask );
 
         // If diagonal input, check movement on one axis
