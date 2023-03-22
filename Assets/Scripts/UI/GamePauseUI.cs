@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,27 +11,32 @@ public class GamePauseUI : MonoBehaviour
     private void Awake()
     {
         resumeButton.onClick.AddListener( () => KitchenGameManager.Instance.TogglePauseGame() );
-        mainMenuButton.onClick.AddListener( () => Loader.Load( Loader.Scene.MainMenuScene ) );
-        optionsButton.onClick.AddListener( () => {
+        mainMenuButton.onClick.AddListener( () =>
+        {
+            NetworkManager.Singleton.Shutdown();
+            Loader.Load( Loader.Scene.MainMenuScene );
+        } );
+        optionsButton.onClick.AddListener( () =>
+        {
             Hide();
             OptionsUI.Instance.Show( Show );
-            } );
+        } );
     }
 
     private void Start()
     {
-        KitchenGameManager.Instance.OnGamePaused += KitchenGameManager_OnGamePaused;
-        KitchenGameManager.Instance.OnGameUnPaused += KitchenGameManager_OnGameUnPaused;
+        KitchenGameManager.Instance.OnLocalGamePaused += KitchenGameManager_OnLocalGamePaused;
+        KitchenGameManager.Instance.OnLocalGameUnPaused += KitchenGameManager_OnLocalGameUnPaused;
 
         Hide();
     }
 
-    private void KitchenGameManager_OnGameUnPaused( object sender , System.EventArgs e )
+    private void KitchenGameManager_OnLocalGameUnPaused( object sender , System.EventArgs e )
     {
         Hide();
     }
 
-    private void KitchenGameManager_OnGamePaused( object sender , System.EventArgs e )
+    private void KitchenGameManager_OnLocalGamePaused( object sender , System.EventArgs e )
     {
         Show();
     }
