@@ -4,6 +4,7 @@ using Unity.Services.Authentication;
 using System.Runtime.CompilerServices;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
 
 public class KitchenGameLobby : MonoBehaviour
 {
@@ -11,6 +12,8 @@ public class KitchenGameLobby : MonoBehaviour
 
 
     private Lobby joinedLobby;
+
+    private float heartBeatTimer;
 
 
     private void Awake()
@@ -33,6 +36,30 @@ public class KitchenGameLobby : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        HandleHeartBeat();
+    }
+
+    private void HandleHeartBeat()
+    {
+        if ( IsLobbyHost() )
+        {
+            heartBeatTimer -= Time.deltaTime;
+            if ( heartBeatTimer <= 0 )
+            {
+                float maxHeartBeatTimer = 15f;
+                heartBeatTimer = maxHeartBeatTimer;
+
+                LobbyService.Instance.SendHeartbeatPingAsync( joinedLobby.Id );
+            }
+        }
+    }
+
+    private bool IsLobbyHost()
+    {
+        return joinedLobby != null && joinedLobby.HostId == AuthenticationService.Instance.PlayerId;
+    }
 
     public async void CreateLobby( string lobbyName , bool isPrivate )
     {
@@ -67,6 +94,26 @@ public class KitchenGameLobby : MonoBehaviour
         {
             Debug.LogError( e );
         }
+    }
+
+
+    public async void JoinLobbyCode( string lobbyCode )
+    {
+        try
+        {
+            joinedLobby = await LobbyService.Instance.JoinLobbyByCodeAsync( lobbyCode );
+
+            KitchenGameMultiplayer.Instance.StartClient();
+        }
+        catch ( LobbyServiceException e )
+        {
+            Debug.LogError( e );
+        }
+    }
+
+    public Lobby GetLobby()
+    {
+        return joinedLobby;
     }
 
 }

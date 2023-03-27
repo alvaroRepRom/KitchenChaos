@@ -20,6 +20,8 @@ public class LobbyCreateUI : MonoBehaviour
             KitchenGameLobby.Instance.CreateLobby( lobbyNameInputField.text , true );
         } );
         closeButton.onClick.AddListener( () => Hide() );
+
+        Hide();
     }
 
     public void Show()
